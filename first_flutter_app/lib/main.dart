@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -81,13 +83,32 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text('Cerrar sesión'),
             ),
             Spacer(),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'contacto@parkandgo.uy',
-                style: TextStyle(color: Colors.grey),
+              Align(
+                alignment: Alignment(0.5, 0),  // Alineación horizontal 3/4 (ajustable)
+                child: IconButton(
+                  icon: FaIcon(
+                    FontAwesomeIcons.whatsapp,
+                    size: 50,  
+                    color: Colors.green,
+                  ),
+                  onPressed: () async {
+                    const phone = '59893535700';
+                    final url = Uri.parse('https://wa.me/$phone');
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url, mode: LaunchMode.externalApplication);
+                    } else {
+                      throw 'No se pudo abrir WhatsApp';
+                    }
+                  },
+                ),
               ),
-            ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'contacto@parkandgo.uy',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
           ],
         ),
       ),
