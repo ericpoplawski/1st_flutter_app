@@ -2,20 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-Future<void> openWhatsAppChat({required String userName}) async {
-  final encodedMessage = Uri.encodeComponent(
-    "Hola, soy $userName y quiero inscribir mi garage",
-  );
-  const phone = '59893535700';
-  final url = Uri.parse('https://wa.me/$phone?text=$encodedMessage');
-
-  if (await canLaunchUrl(url)) {
-    await launchUrl(url, mode: LaunchMode.externalApplication);
-  } else {
-    throw 'No se pudo abrir WhatsApp';
-  }
-}
-
 class AppDrawer extends StatelessWidget {
   final String userName;
 
@@ -24,12 +10,34 @@ class AppDrawer extends StatelessWidget {
     this.userName = 'Eric',
   });
 
+Future<void> openWhatsAppChat(BuildContext context, {required String userName}) async {
+  final encodedMessage = Uri.encodeComponent(
+    "Hola, soy $userName y quiero inscribir mi garage",
+  );
+  const phone = '59893535700';
+  final url = Uri.parse('https://wa.me/$phone?text=$encodedMessage');
+
+  final canLaunch = await canLaunchUrl(url);
+  if (!context.mounted) return;  // 🔔 <- Este guard permite evitar problemas si el widget fue destruido
+
+  if (canLaunch) {
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('No se pudo abrir WhatsApp: app no instalada'),
+      ),
+    );
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: Column(
         children: <Widget>[
-          UserAccountsDrawerHeader(
+          const UserAccountsDrawerHeader(
             decoration: BoxDecoration(
               color: Colors.deepPurple,
             ),
@@ -45,45 +53,45 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.calendar_today),
-            title: Text('Reservas realizadas'),
+            leading: const Icon(Icons.calendar_today),
+            title: const Text('Reservas realizadas'),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.garage),
-            title: Text('Mis garajes'),
+            leading: const Icon(Icons.garage),
+            title: const Text('Mis garajes'),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.check_box),
-            title: Text('Reservas a mis garajes'),
+            leading: const Icon(Icons.check_box),
+            title: const Text('Reservas a mis garajes'),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.person),
-            title: Text('Datos personales'),
+            leading: const Icon(Icons.person),
+            title: const Text('Datos personales'),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('Cerrar sesión'),
+            leading: const Icon(Icons.logout),
+            title: const Text('Cerrar sesión'),
             onTap: () {},
           ),
-          Spacer(),
+          const Spacer(),
           Align(
-            alignment: Alignment(0.5, 0),
+            alignment: const Alignment(0.5, 0),
             child: IconButton(
-              icon: FaIcon(
+              icon: const FaIcon(
                 FontAwesomeIcons.whatsapp,
                 size: 50,
                 color: Colors.green,
               ),
               onPressed: () {
-                openWhatsAppChat(userName: userName);
+                openWhatsAppChat(context, userName: userName);
               },
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
               'contacto@parkandgo.uy',
