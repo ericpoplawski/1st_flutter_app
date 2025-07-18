@@ -1,0 +1,28 @@
+# Flutter/Dart/Pub related
+.dart_tool/
+.packages
+.pub-cache/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+generated_plugin_registrant.dart
+
+# VS Code related
+.vscode/
+
+# IntelliJ related
+.idea/
+*.iml
+
+# MacOS related
+.DS_Store
+
+# Windows related
+Thumbs.db
+
+# Flutter specific
+.flutter-*
+.melOS
+
+# Others
+pubspec.lock
