@@ -2,8 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+Future<void> openWhatsAppChat({required String userName}) async {
+  final encodedMessage = Uri.encodeComponent(
+    "Hola, soy $userName y quiero inscribir mi garage",
+  );
+  const phone = '59893535700';
+  final url = Uri.parse('https://wa.me/$phone?text=$encodedMessage');
+
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  } else {
+    throw 'No se pudo abrir WhatsApp';
+  }
+}
+
 class AppDrawer extends StatelessWidget {
-  const AppDrawer({super.key});
+  final String userName;
+
+  const AppDrawer({
+    super.key,
+    this.userName = 'Eric',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,32 +47,27 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.calendar_today),
             title: Text('Reservas realizadas'),
-            onTap: () {
-            },
+            onTap: () {},
           ),
           ListTile(
             leading: Icon(Icons.garage),
             title: Text('Mis garajes'),
-            onTap: () {
-            },
+            onTap: () {},
           ),
           ListTile(
             leading: Icon(Icons.check_box),
             title: Text('Reservas a mis garajes'),
-            onTap: () {
-            },
+            onTap: () {},
           ),
           ListTile(
             leading: Icon(Icons.person),
             title: Text('Datos personales'),
-            onTap: () {
-            },
+            onTap: () {},
           ),
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('Cerrar sesión'),
-            onTap: () {
-            },
+            onTap: () {},
           ),
           Spacer(),
           Align(
@@ -64,14 +78,8 @@ class AppDrawer extends StatelessWidget {
                 size: 50,
                 color: Colors.green,
               ),
-              onPressed: () async {
-                const phone = '59893535700';
-                final url = Uri.parse('https://wa.me/$phone');
-                if (await canLaunchUrl(url)) {
-                  await launchUrl(url, mode: LaunchMode.externalApplication);
-                } else {
-                  throw 'No se pudo abrir WhatsApp';
-                }
+              onPressed: () {
+                openWhatsAppChat(userName: userName);
               },
             ),
           ),
